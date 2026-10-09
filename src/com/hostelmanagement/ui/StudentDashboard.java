@@ -130,7 +130,7 @@ public class StudentDashboard extends JFrame {
 
     private void logout() {
 
-        Session.clearSession();
+        com.hostelmanagement.session.Session.clearSession();
 
         dispose();
 

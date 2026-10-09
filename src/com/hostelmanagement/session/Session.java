@@ -6,6 +6,9 @@ public class Session {
 
     private static User currentUser;
 
+    private Session() {
+    }
+
     public static void setCurrentUser(User user) {
         currentUser = user;
     }

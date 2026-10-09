@@ -4,13 +4,13 @@ import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.sql.SQLException;
 
 import javax.swing.*;
 
 import com.hostelmanagement.auth.AuthService;
 import com.hostelmanagement.model.User;
 import com.hostelmanagement.session.Session;
-import com.hostelmanagement.util.UIUtils;
 
 public class LoginFrame extends JFrame {
 
@@ -18,13 +18,9 @@ public class LoginFrame extends JFrame {
     private JPasswordField passwordField;
 
     public LoginFrame() {
-
         setTitle("Student Hostel Management System - Login");
-
-        setSize(450, 300);
-
+        setSize(450, 320);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
         setLocationRelativeTo(null);
 
         initializeUI();
@@ -32,108 +28,107 @@ public class LoginFrame extends JFrame {
 
     private void initializeUI() {
 
-        JLabel titleLabel =
-                new JLabel("Student Hostel Management System");
-
-        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-
-        titleLabel.setBorder(
-                BorderFactory.createEmptyBorder(20, 10, 20, 10)
+        JLabel title = new JLabel(
+                "Student Hostel Management System",
+                SwingConstants.CENTER
         );
 
-        add(titleLabel, BorderLayout.NORTH);
+        title.setBorder(
+                BorderFactory.createEmptyBorder(20, 10, 15, 10)
+        );
 
-        JPanel panel = new JPanel(new GridBagLayout());
+        add(title, BorderLayout.NORTH);
 
+        JPanel form = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
 
         gbc.insets = new Insets(8, 8, 8, 8);
-
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JLabel usernameLabel = new JLabel("Username:");
-
         usernameField = new JTextField(20);
-
-        JLabel passwordLabel = new JLabel("Password:");
-
         passwordField = new JPasswordField(20);
-
-        JButton loginButton =
-                UIUtils.createButton("Login");
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-
-        panel.add(usernameLabel, gbc);
+        form.add(new JLabel("Username:"), gbc);
 
         gbc.gridx = 1;
-
-        panel.add(usernameField, gbc);
+        form.add(usernameField, gbc);
 
         gbc.gridx = 0;
         gbc.gridy = 1;
-
-        panel.add(passwordLabel, gbc);
+        form.add(new JLabel("Password:"), gbc);
 
         gbc.gridx = 1;
+        form.add(passwordField, gbc);
 
-        panel.add(passwordField, gbc);
+        JButton loginButton = new JButton("Login");
+        JButton registerButton = new JButton("Register as Student");
 
         gbc.gridx = 1;
         gbc.gridy = 2;
+        form.add(loginButton, gbc);
 
-        panel.add(loginButton, gbc);
+        gbc.gridy = 3;
+        form.add(registerButton, gbc);
 
-        add(panel, BorderLayout.CENTER);
+        add(form, BorderLayout.CENTER);
 
         loginButton.addActionListener(e -> performLogin());
-
         passwordField.addActionListener(e -> performLogin());
+
+        registerButton.addActionListener(e -> {
+            new RegisterFrame().setVisible(true);
+            dispose();
+        });
     }
 
     private void performLogin() {
 
-        String username =
-                usernameField.getText().trim();
-
-        String password =
-                new String(passwordField.getPassword());
+        String username = usernameField.getText().trim();
+        String password = new String(passwordField.getPassword());
 
         if (username.isEmpty() || password.isEmpty()) {
-
-            UIUtils.showMessage(
-                    this,
-                    "Please enter username and password."
+            JOptionPane.showMessageDialog(
+                    this, "Enter both username and password."
             );
-
             return;
         }
 
-        User user =
-                AuthService.login(username, password);
+        try {
+            User user = AuthService.login(username, password);
 
-        if (user == null) {
+            if (user == null) {
+                JOptionPane.showMessageDialog(
+                        this, "Invalid credentials or inactive account."
+                );
+                return;
+            }
 
-            UIUtils.showMessage(
+            Session.setCurrentUser(user);
+            dispose();
+
+            if ("ADMIN".equals(user.getRole())) {
+                new AdminDashboard().setVisible(true);
+            } else if ("STUDENT".equals(user.getRole())) {
+                new StudentDashboard().setVisible(true);
+            } else {
+                Session.clearSession();
+                JOptionPane.showMessageDialog(
+                        null, "Unrecognized user role."
+                );
+                new LoginFrame().setVisible(true);
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(
                     this,
-                    "Invalid username or password."
+                    "Could not connect to the database.\n"
+                            + "Check MySQL Server and DBConnection settings.\n\n"
+                            + ex.getMessage(),
+                    "Database Error",
+                    JOptionPane.ERROR_MESSAGE
             );
-
-            return;
-        }
-
-        Session.setCurrentUser(user);
-
-        dispose();
-
-        if (user.getRole().equals("ADMIN")) {
-
-            new AdminDashboard().setVisible(true);
-
-        } else if (user.getRole().equals("STUDENT")) {
-
-            new StudentDashboard().setVisible(true);
         }
     }
 }

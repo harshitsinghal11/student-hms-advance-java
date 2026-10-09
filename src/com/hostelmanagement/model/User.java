@@ -2,31 +2,36 @@ package com.hostelmanagement.model;
 
 public class User {
 
-    private String username;
-    private String password;
-    private String role;
-    private String name;
+    private final int userId;
+    private final String fullName;
+    private final String username;
+    private final String role;
 
-    public User(String username, String password, String role, String name) {
+    public User(
+            int userId,
+            String fullName,
+            String username,
+            String role
+    ) {
+        this.userId = userId;
+        this.fullName = fullName;
         this.username = username;
-        this.password = password;
         this.role = role;
-        this.name = name;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public String getFullName() {
+        return fullName;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     public String getRole() {
         return role;
-    }
-
-    public String getName() {
-        return name;
     }
 }

@@ -184,7 +184,7 @@ public class AdminDashboard extends JFrame {
 
     private void logout() {
 
-        Session.clearSession();
+        com.hostelmanagement.session.Session.clearSession();
 
         dispose();
 
