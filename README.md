@@ -274,148 +274,181 @@ graph TD
 ---
 
 ### Diagram 2: UML Class Diagram
-*Illustrates the object-oriented structure, class responsibilities, and relationships implemented in the system.*
+*A comprehensive, hierarchical 3-tier UML Class Diagram covering all functional modules (Students, Rooms, Allocations, Fees, Complaints, Reports, and Security) structured top-to-bottom without visual clutter.*
 
 ```mermaid
 classDiagram
     direction TB
 
-    class Main {
-        +main(args: String[]) void
+    %% ==========================================
+    %% TIER 1: PRESENTATION LAYER (GUI)
+    %% ==========================================
+    class LoginFrame {
+        -JTextField usernameField
+        -JPasswordField passwordField
+        +performLogin()
+        +openRegister()
     }
 
-    class DBConnection {
-        -String URL$
-        -String DB_USER$
-        -String DB_PASSWORD$
-        +getConnection()$ Connection
+    class AdminDashboard {
+        +openStudentManagement()
+        +openRoomManagement()
+        +openRoomAllocation()
+        +openFeeManagement()
+        +openComplaintManagement()
+        +openReports()
+        +logout()
     }
 
-    class PasswordUtil {
-        -int ITERATIONS$
-        -int KEY_LENGTH$
-        -int SALT_LENGTH$
-        +hashPassword(password: String)$ String
-        +verifyPassword(password: String, storedValue: String)$ boolean
-        -deriveKey(password: char[], salt: byte[])$ byte[]
+    class StudentDashboard {
+        +openProfile()
+        +openRoomDetails()
+        +openFees()
+        +openComplaints()
+        +logout()
     }
 
+    class ModuleFrame {
+        -String moduleName
+        +displayModuleActions()
+    }
+
+    %% ==========================================
+    %% TIER 2: BUSINESS SERVICES & DAOs
+    %% ==========================================
     class AuthService {
-        +login(username: String, password: String)$ User
-        +registerStudent(fullName: String, username: String, password: String)$ boolean
+        +login(username, password) User
+        +registerStudent(name, username, password) boolean
+        +changePassword(userId, oldPass, newPass) boolean
     }
 
+    class StudentService {
+        +addStudent(Student) boolean
+        +updateStudent(Student) boolean
+        +deleteStudent(int studentId) boolean
+        +searchStudent(String query) List~Student~
+    }
+
+    class RoomService {
+        +addRoom(Room) boolean
+        +updateRoom(Room) boolean
+        +allocateRoom(int studentId, int roomId) boolean
+        +vacateRoom(int allocationId) boolean
+        +getAvailableRooms() List~Room~
+    }
+
+    class FeeService {
+        +recordFee(Fee) boolean
+        +recordPayment(int feeId, double amount) boolean
+        +getPendingFees() List~Fee~
+    }
+
+    class ComplaintService {
+        +submitComplaint(Complaint) boolean
+        +updateStatus(int complaintId, String status) boolean
+        +getComplaintsByStudent(int studentId) List~Complaint~
+    }
+
+    class ReportService {
+        +generateOccupancyReport()
+        +generateFeeReport()
+        +generateComplaintReport()
+    }
+
+    %% ==========================================
+    %% TIER 3: DOMAIN ENTITIES & PERSISTENCE
+    %% ==========================================
     class User {
         -int userId
         -String fullName
         -String username
         -String role
-        +getUserId() int
-        +getFullName() String
-        +getUsername() String
         +getRole() String
     }
 
-    class Session {
-        -User currentUser$
-        +setCurrentUser(user: User)$ void
-        +getCurrentUser()$ User
-        +clearSession()$ void
+    class Student {
+        -int studentId
+        -String rollNumber
+        -String course
+        -String contactNumber
+        +getRollNumber() String
     }
 
-    class AdminSetup {
-        +main(args: String[]) void
+    class Room {
+        -int roomId
+        -String roomNumber
+        -int capacity
+        -int currentOccupancy
+        -String roomStatus
     }
 
-    class UIUtils {
-        +createButton(text: String)$ JButton
-        +showMessage(parent: Component, message: String)$ void
+    class Allocation {
+        -int allocationId
+        -int studentId
+        -int roomId
+        -Date allocationDate
+        -String status
     }
 
-    class LoginFrame {
-        -JTextField usernameField
-        -JPasswordField passwordField
-        +LoginFrame()
-        -initializeUI() void
-        -performLogin() void
+    class Fee {
+        -int feeId
+        -int studentId
+        -double amountDue
+        -double amountPaid
+        -String paymentStatus
     }
 
-    class RegisterFrame {
-        -JTextField nameField
-        -JTextField usernameField
-        -JPasswordField passwordField
-        -JPasswordField confirmPasswordField
-        +RegisterFrame()
-        -initializeUI() void
-        -registerStudent() void
+    class Complaint {
+        -int complaintId
+        -int studentId
+        -String category
+        -String description
+        -String status
     }
 
-    class AdminDashboard {
-        +AdminDashboard()
-        -initializeUI() void
-        -openStudentManagement() void
-        -openRoomManagement() void
-        -openRoomAllocation() void
-        -openFeeManagement() void
-        -openComplaintManagement() void
-        -openReports() void
-        -logout() void
+    class DBConnection {
+        +getConnection()$ Connection
     }
 
-    class StudentDashboard {
-        +StudentDashboard()
-        -initializeUI() void
-        -openProfile() void
-        -openRoomDetails() void
-        -openFees() void
-        -openComplaints() void
-        -logout() void
-    }
+    %% ==========================================
+    %% HIERARCHICAL RELATIONSHIPS
+    %% ==========================================
+    %% Tier 1 Navigation
+    LoginFrame --> AdminDashboard : routes (Role: ADMIN)
+    LoginFrame --> StudentDashboard : routes (Role: STUDENT)
+    AdminDashboard --> ModuleFrame : launches module
+    StudentDashboard --> ModuleFrame : launches module
 
-    class ModuleFrame {
-        -String moduleName
-        +ModuleFrame(moduleName: String, functions: String[])
-        -initializeUI(functions: String[]) void
-    }
-
-    class ChangePasswordDialog {
-        -JPasswordField currentPasswordField
-        -JPasswordField newPasswordField
-        -JPasswordField confirmPasswordField
-        +ChangePasswordDialog(parent: Frame)
-        -initializeUI() void
-        -handleChangePassword() void
-    }
-
-    %% Relationships
-    Main ..> LoginFrame : launches
+    %% Tier 1 to Tier 2 Invocations
     LoginFrame ..> AuthService : invokes
-    LoginFrame ..> Session : stores authenticated user
-    LoginFrame ..> AdminDashboard : opens if role=ADMIN
-    LoginFrame ..> StudentDashboard : opens if role=STUDENT
-    LoginFrame ..> RegisterFrame : navigates to
-    RegisterFrame ..> AuthService : invokes register
-    AuthService ..> DBConnection : acquires connection
-    AuthService ..> PasswordUtil : hashes/verifies
-    AuthService ..> User : instantiates
-    AdminSetup ..> DBConnection : provisions admin
-    AdminSetup ..> PasswordUtil : hashes admin password
-    Session o-- User : maintains reference
-    AdminDashboard ..> ModuleFrame : opens module view
-    StudentDashboard ..> ModuleFrame : opens module view
-    AdminDashboard ..> ChangePasswordDialog : opens
-    StudentDashboard ..> ChangePasswordDialog : opens
-    ChangePasswordDialog ..> AuthService : invokes changePassword
-    ChangePasswordDialog ..> Session : retrieves active user
-    ChangePasswordDialog ..> UIUtils : uses helper styling
-    AdminDashboard ..> Session : clears on logout
-    StudentDashboard ..> Session : clears on logout
-    AdminDashboard ..> LoginFrame : redirects on logout
-    StudentDashboard ..> LoginFrame : redirects on logout
-    AdminDashboard ..> UIUtils : uses helper styling
-    StudentDashboard ..> UIUtils : uses helper styling
-    LoginFrame ..> UIUtils : uses helper styling
-    ModuleFrame ..> UIUtils : uses helper styling
+    ModuleFrame ..> StudentService : invokes
+    ModuleFrame ..> RoomService : invokes
+    ModuleFrame ..> FeeService : invokes
+    ModuleFrame ..> ComplaintService : invokes
+    ModuleFrame ..> ReportService : invokes
+
+    %% Tier 2 to Tier 3 Data Operations
+    AuthService ..> User : authenticates
+    StudentService ..> Student : manages
+    RoomService ..> Room : manages
+    RoomService ..> Allocation : manages
+    FeeService ..> Fee : manages
+    ComplaintService ..> Complaint : manages
+
+    %% Tier 2 to Database
+    AuthService ..> DBConnection : queries
+    StudentService ..> DBConnection : queries
+    RoomService ..> DBConnection : queries
+    FeeService ..> DBConnection : queries
+    ComplaintService ..> DBConnection : queries
+    ReportService ..> DBConnection : queries
+
+    %% Domain Entity Associations
+    User <|-- Student : extends
+    Student "1" -- "*" Allocation : receives
+    Room "1" -- "*" Allocation : assigned to
+    Student "1" -- "*" Fee : pays
+    Student "1" -- "*" Complaint : files
 ```
 
 ---
