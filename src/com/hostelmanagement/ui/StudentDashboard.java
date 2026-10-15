@@ -1,6 +1,9 @@
 package com.hostelmanagement.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 
 import javax.swing.*;
@@ -14,7 +17,7 @@ public class StudentDashboard extends JFrame {
 
         setTitle("Student Dashboard");
 
-        setSize(700, 500);
+        setSize(750, 500);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -27,19 +30,35 @@ public class StudentDashboard extends JFrame {
 
         JPanel topPanel = new JPanel(new BorderLayout());
 
+        String userDisplay = (Session.getCurrentUser() != null)
+                ? Session.getCurrentUser().getFullName()
+                : "Student";
+
         JLabel titleLabel =
-                new JLabel("Student Dashboard");
+                new JLabel("Student Dashboard | Welcome, " + userDisplay);
+
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 14));
 
         titleLabel.setBorder(
-                BorderFactory.createEmptyBorder(10, 10, 10, 10)
+                BorderFactory.createEmptyBorder(10, 15, 10, 15)
         );
 
         topPanel.add(titleLabel, BorderLayout.WEST);
 
+        JPanel actionPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 5));
+
+        JButton changePasswordButton =
+                UIUtils.createButton("Change Password");
+        changePasswordButton.setPreferredSize(new Dimension(150, 32));
+
         JButton logoutButton =
                 UIUtils.createButton("Logout");
+        logoutButton.setPreferredSize(new Dimension(90, 32));
 
-        topPanel.add(logoutButton, BorderLayout.EAST);
+        actionPanel.add(changePasswordButton);
+        actionPanel.add(logoutButton);
+
+        topPanel.add(actionPanel, BorderLayout.EAST);
 
         add(topPanel, BorderLayout.NORTH);
 
@@ -80,6 +99,9 @@ public class StudentDashboard extends JFrame {
 
         complaintsButton.addActionListener(e ->
                 openComplaints());
+
+        changePasswordButton.addActionListener(e ->
+                new ChangePasswordDialog(this).setVisible(true));
 
         logoutButton.addActionListener(e ->
                 logout());

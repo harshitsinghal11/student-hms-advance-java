@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Locale;
 
 import com.hostelmanagement.database.DBConnection;
 import com.hostelmanagement.model.User;
@@ -84,6 +83,49 @@ public class AuthService {
             }
 
             throw e;
+        }
+    }
+
+    public static boolean changePassword(
+            int userId,
+            String oldPassword,
+            String newPassword
+    ) throws SQLException {
+
+        String selectSql = """
+                SELECT password_hash
+                FROM users
+                WHERE user_id = ?
+                  AND is_active = TRUE
+                """;
+
+        try (Connection con = DBConnection.getConnection();
+             PreparedStatement ps = con.prepareStatement(selectSql)) {
+
+            ps.setInt(1, userId);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (!rs.next()) {
+                    return false;
+                }
+
+                String storedHash = rs.getString("password_hash");
+                if (!PasswordUtil.verifyPassword(oldPassword, storedHash)) {
+                    return false;
+                }
+            }
+
+            String updateSql = """
+                    UPDATE users
+                    SET password_hash = ?
+                    WHERE user_id = ?
+                    """;
+
+            try (PreparedStatement updatePs = con.prepareStatement(updateSql)) {
+                updatePs.setString(1, PasswordUtil.hashPassword(newPassword));
+                updatePs.setInt(2, userId);
+                return updatePs.executeUpdate() == 1;
+            }
         }
     }
 }
