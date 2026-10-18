@@ -438,15 +438,15 @@ classDiagram
     }
 
     class DBConnection {
-        +getConnection()$ Connection
+        +getConnection() Connection
     }
 
     %% ==========================================
     %% HIERARCHICAL RELATIONSHIPS
     %% ==========================================
     %% Tier 1 Navigation
-    LoginFrame --> AdminDashboard : routes (Role: ADMIN)
-    LoginFrame --> StudentDashboard : routes (Role: STUDENT)
+    LoginFrame --> AdminDashboard : routes to Admin
+    LoginFrame --> StudentDashboard : routes to Student
     AdminDashboard --> ModuleFrame : launches module
     StudentDashboard --> ModuleFrame : launches module
 
@@ -476,10 +476,10 @@ classDiagram
 
     %% Domain Entity Associations
     User <|-- Student : extends
-    Student "1" -- "*" Allocation : receives
-    Room "1" -- "*" Allocation : assigned to
-    Student "1" -- "*" Fee : pays
-    Student "1" -- "*" Complaint : files
+    Student "1" --> "*" Allocation : receives
+    Room "1" --> "*" Allocation : assigned to
+    Student "1" --> "*" Fee : pays
+    Student "1" --> "*" Complaint : files
 ```
 
 ---

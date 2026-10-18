@@ -1,4 +1,6 @@
 .metadata/
+bin/
+*.class
 *.log
 .recommenders/
 Thumbs.db
