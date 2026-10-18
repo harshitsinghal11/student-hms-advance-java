@@ -56,33 +56,59 @@ public class AuthService {
             String password
     ) throws SQLException {
 
-        String sql = """
+        String userSql = """
                 INSERT INTO users
                     (full_name, username, password_hash, role)
                 VALUES (?, ?, ?, 'STUDENT')
                 """;
 
+        String studentSql = """
+                INSERT INTO students
+                    (user_id, roll_number, course, contact_number, emergency_contact, address)
+                VALUES (?, ?, 'General', 'Not Provided', 'Not Provided', 'Hostel Resident')
+                """;
+
         String hashedPassword =
                 PasswordUtil.hashPassword(password);
 
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql)) {
+        try (Connection con = DBConnection.getConnection()) {
+            con.setAutoCommit(false);
+            try {
+                int userId;
+                try (PreparedStatement ps = con.prepareStatement(userSql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
+                    ps.setString(1, fullName.trim());
+                    ps.setString(2, username.trim());
+                    ps.setString(3, hashedPassword);
+                    ps.executeUpdate();
 
-            ps.setString(1, fullName.trim());
-            ps.setString(2, username.trim());
-            ps.setString(3, hashedPassword);
+                    try (ResultSet rs = ps.getGeneratedKeys()) {
+                        if (!rs.next()) {
+                            con.rollback();
+                            return false;
+                        }
+                        userId = rs.getInt(1);
+                    }
+                }
 
-            return ps.executeUpdate() == 1;
+                String generatedRoll = "STU-" + username.trim().toUpperCase();
+                try (PreparedStatement psStudent = con.prepareStatement(studentSql)) {
+                    psStudent.setInt(1, userId);
+                    psStudent.setString(2, generatedRoll);
+                    psStudent.executeUpdate();
+                }
 
-        } catch (SQLException e) {
+                con.commit();
+                return true;
 
-            // MySQL error 1062 means duplicate unique value.
-            if (e.getErrorCode() == 1062
-                    && "23000".equals(e.getSQLState())) {
-                return false;
+            } catch (SQLException e) {
+                con.rollback();
+                if (e.getErrorCode() == 1062 && "23000".equals(e.getSQLState())) {
+                    return false;
+                }
+                throw e;
+            } finally {
+                con.setAutoCommit(true);
             }
-
-            throw e;
         }
     }
 

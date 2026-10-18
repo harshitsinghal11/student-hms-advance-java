@@ -122,86 +122,27 @@ public class AdminDashboard extends JFrame {
     }
 
     private void openStudentManagement() {
-
-        new ModuleFrame(
-                "Student Management",
-                new String[]{
-                        "Add Student",
-                        "View Student",
-                        "Search Student",
-                        "Update Student",
-                        "Delete Student"
-                }
-        ).setVisible(true);
+        new StudentManagementFrame().setVisible(true);
     }
 
     private void openRoomManagement() {
-
-        new ModuleFrame(
-                "Room Management",
-                new String[]{
-                        "View Room",
-                        "Add Room",
-                        "Update Room",
-                        "Delete Room",
-                        "View Available Rooms",
-                        "View Occupied Rooms"
-                }
-        ).setVisible(true);
+        new RoomManagementFrame().setVisible(true);
     }
 
     private void openRoomAllocation() {
-
-        new ModuleFrame(
-                "Room Allocation",
-                new String[]{
-                        "Allocate Room",
-                        "Change Room",
-                        "Vacate Room",
-                        "View Allocation"
-                }
-        ).setVisible(true);
+        new RoomAllocationFrame().setVisible(true);
     }
 
     private void openFeeManagement() {
-
-        new ModuleFrame(
-                "Fee Management",
-                new String[]{
-                        "Record Fee",
-                        "View Fee",
-                        "View Pending Fees",
-                        "Record Payment",
-                        "Update Payment Status"
-                }
-        ).setVisible(true);
+        new FeeManagementFrame().setVisible(true);
     }
 
     private void openComplaintManagement() {
-
-        new ModuleFrame(
-                "Complaint Management",
-                new String[]{
-                        "View Complaints",
-                        "View Complaint Details",
-                        "Update Status",
-                        "Resolve Complaint"
-                }
-        ).setVisible(true);
+        new ComplaintManagementFrame().setVisible(true);
     }
 
     private void openReports() {
-
-        new ModuleFrame(
-                "Reports",
-                new String[]{
-                        "Student Report",
-                        "Room Report",
-                        "Fee Report",
-                        "Occupancy Report",
-                        "Complaint Report"
-                }
-        ).setVisible(true);
+        new ReportsFrame().setVisible(true);
     }
 
     private void logout() {

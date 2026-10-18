@@ -1,0 +1,5 @@
+.metadata/
+*.log
+.recommenders/
+Thumbs.db
+.DS_Store

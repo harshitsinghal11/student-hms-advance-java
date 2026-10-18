@@ -125,12 +125,12 @@ The project is executed across three planned phases to achieve enterprise scalab
         │     • Dynamic Role-Based Routing (Admin vs. Student)
         │     • Navigation wireframes matching Functional Decomposition Diagram
         │
-        ├───► [PHASE 2] Full Desktop Business Logic & Data CRUD (UPCOMING ⏳)
+        ├───► [PHASE 2] Full Desktop Business Logic & Data CRUD (COMPLETED ✅)
         │     • Multi-entity relational schema (Students, Rooms, Allocations, Fees, Complaints)
-        │     • Data Access Object (DAO) layer implementation
+        │     • Data Access Object (DAO) layer implementation with transactional integrity
         │     • Interactive `JTable` views with search, sort, and filter features
         │     • Transactional workflows: Room Allocation, Fee Receipts, Complaint Updates
-        │     • Automated tabular and printable hostel reports
+        │     • Automated analytical hostel reports (Demographics, Occupancy, Fees, Complaints)
         │
         └───► [PHASE 3] Enterprise Web Application Migration (FINAL PHASE 🌐)
               • Migration from Desktop Swing to Web MVC Architecture
@@ -179,11 +179,42 @@ As of **Phase 1**, the complete foundational framework has been engineered and v
    - Intuitive Swing interfaces built with clean borders, cohesive color accents, and standard fonts.
    - Dynamic top banners displaying personalized user greetings (`Logged in as: <Name>`).
    - 100% synchronized with the **Functional Decomposition Diagram (FDD)**.
-   - Interactive button dispatch triggers informative feedback dialogs awaiting Phase 2 logic.
 
 8. **Self-Service Password Management (`ChangePasswordDialog.java` & `AuthService.changePassword`):**
    - Completes the third branch of Authentication from the FDD (`Login`, `Logout`, `Change Password`).
    - Enforces password confirmation, old-password re-verification against stored PBKDF2 hash, and role-appropriate character length requirements.
+
+---
+
+## 🚀 What Has Been Implemented (Phase 2 Status)
+
+In **Phase 2**, the complete desktop application and relational database operations have been fully engineered:
+
+1. **Relational Database Expansion (`phase2_schema.sql`):**
+   - Implemented 5 relational tables (`students`, `rooms`, `allocations`, `fees`, `complaints`) with foreign key constraints, cascading deletions, and data integrity guarantees.
+   - Seeded initial room configurations and sample accommodation records.
+
+2. **Enterprise Data Access Object (DAO) Architecture:**
+   - **`StudentDAO.java`**: Full student CRUD operations, multi-parameter search, and transactional user-student profile creation.
+   - **`RoomDAO.java`**: Capacity tracking, available vs. occupied room querying, and safe room deletion guards.
+   - **`AllocationDAO.java`**: Transactional room allotment, room transfer/change, and vacation logic that automatically updates live bed occupancy.
+   - **`FeeDAO.java`**: Invoice generation, payment recording, balance calculations, and payment status transitions (`PENDING` ➔ `PAID`).
+   - **`ComplaintDAO.java`**: Grievance registration, warden status tracking (`PENDING` ➔ `IN_PROGRESS` ➔ `RESOLVED`), and resolution remark logging.
+   - **`ReportDAO.java`**: Multi-dimensional analytical querying for student demographics, room occupancy metrics, fee audits, and grievance summaries.
+
+3. **Interactive Admin Control Panels:**
+   - **`StudentManagementFrame.java`**: Real-time student search, tabular records, add/edit modal dialogues, and safe deletions.
+   - **`RoomManagementFrame.java`**: Room inventory filtering (All / Available / Occupied), room addition, and capacity updates.
+   - **`RoomAllocationFrame.java`**: Streamlined allotment dialog with auto-filtered unallocated students and vacant rooms, room transfer, and vacation handlers.
+   - **`FeeManagementFrame.java`**: Invoice generation, partial/full payment recording with receipt reference tracking.
+   - **`ComplaintManagementFrame.java`**: Complaint inbox for hostel wardens with live status updating and remark entry.
+   - **`ReportsFrame.java`**: Tabbed analytics center rendering Student Demographics, Room Occupancy rates, Fee Auditing, and Complaint Redressal reports.
+
+4. **Dedicated Student Resident Self-Service:**
+   - **`StudentProfileFrame.java`**: View personal academic records and update contact/emergency phone numbers and address.
+   - **`StudentRoomFrame.java`**: Real-time view of allocated room number, block, capacity, current roommates, and monthly fee.
+   - **`StudentFeesFrame.java`**: Live status of fee invoices, payment receipts, and outstanding dues.
+   - **`StudentComplaintsFrame.java`**: Form to submit maintenance grievances with category tags and track resolution statuses.
 
 ---
 
@@ -539,7 +570,8 @@ studentHostelManagementSystem/
 ├── README.md                           # Comprehensive project documentation
 │
 ├── MySQL Database/                     # Database Definition & SQL Scripts
-│   └── users.sql                       # DDL for database and `users` authentication table
+│   ├── users.sql                       # Phase 1 DDL: Database & Authentication Table
+│   └── phase2_schema.sql               # Phase 2 DDL: Students, Rooms, Allocations, Fees, Complaints
 │
 ├── src/                                # Java Source Code
 │   │
@@ -553,10 +585,23 @@ studentHostelManagementSystem/
 │       │   ├── AuthService.java        # Authentication business logic & SQL executions
 │       │   └── PasswordUtil.java       # Industrial PBKDF2-HMAC-SHA256 password security
 │       │
+│       ├── dao/                        # Data Access Object (DAO) Persistence Layer
+│       │   ├── AllocationDAO.java      # Room allocation, transfer, and vacate operations
+│       │   ├── ComplaintDAO.java       # Student grievance filing and status updates
+│       │   ├── FeeDAO.java             # Fee billing, payment tracking, and receipt logs
+│       │   ├── ReportDAO.java          # Analytics, statistics, and audit report generation
+│       │   ├── RoomDAO.java            # Room inventory, capacity, and status queries
+│       │   └── StudentDAO.java         # Student profiles, CRUD, and search filters
+│       │
 │       ├── database/                   # Database Connectivity Layer
 │       │   └── DBConnection.java       # JDBC Connection Factory for MySQL
 │       │
 │       ├── model/                      # Data Transfer Objects & Domain Models
+│       │   ├── Allocation.java         # Room allotment entity
+│       │   ├── Complaint.java          # Maintenance request entity
+│       │   ├── Fee.java                # Fee invoice and payment transaction entity
+│       │   ├── Room.java               # Hostel room and bed capacity entity
+│       │   ├── Student.java            # Student resident profile entity
 │       │   └── User.java               # Immutable representation of an authenticated user
 │       │
 │       ├── session/                    # In-Memory Session Management
@@ -565,13 +610,23 @@ studentHostelManagementSystem/
 │       ├── ui/                         # Presentation Layer (Java Swing GUI)
 │       │   ├── AdminDashboard.java     # Warden & Admin control panel
 │       │   ├── ChangePasswordDialog.java # Self-service password update modal
+│       │   ├── ComplaintManagementFrame.java # Admin complaint resolution dashboard
+│       │   ├── FeeManagementFrame.java # Admin fee invoice and payment tracker
 │       │   ├── LoginFrame.java         # User login screen with role redirection
 │       │   ├── ModuleFrame.java        # Modular container for sub-functional workflows
 │       │   ├── RegisterFrame.java      # Student self-registration window
-│       │   └── StudentDashboard.java   # Student resident self-service dashboard
+│       │   ├── ReportsFrame.java       # Tabbed administrative reporting center
+│       │   ├── RoomAllocationFrame.java# Bed allotment, transfer, and vacate console
+│       │   ├── RoomManagementFrame.java# Room inventory and capacity management
+│       │   ├── StudentComplaintsFrame.java # Student grievance submission and tracking
+│       │   ├── StudentDashboard.java   # Student resident self-service dashboard
+│       │   ├── StudentFeesFrame.java   # Student fee dues and payment receipts view
+│       │   ├── StudentManagementFrame.java # Admin student directory and CRUD console
+│       │   ├── StudentProfileFrame.java# Student profile view and contact updater
+│       │   └── StudentRoomFrame.java   # Student allocated room and roommate details
 │       │
 │       └── util/                       # Reusable UI & Application Utilities
-│           └── UIUtils.java            # Standardized button styling and dialog alerts
+│           └── UIUtils.java            # Standardized button styling, table renderer, dialogs
 │
 └── bin/                                # Compiled Bytecode (.class files)
 ```
