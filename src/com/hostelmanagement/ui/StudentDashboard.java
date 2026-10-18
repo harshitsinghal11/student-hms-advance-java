@@ -108,46 +108,19 @@ public class StudentDashboard extends JFrame {
     }
 
     private void openProfile() {
-
-        new ModuleFrame(
-                "Profile",
-                new String[]{
-                        "View Profile",
-                        "Update Profile"
-                }
-        ).setVisible(true);
+        new StudentProfileFrame().setVisible(true);
     }
 
     private void openRoomDetails() {
-
-        new ModuleFrame(
-                "Room Details",
-                new String[]{
-                        "View Allocated Room"
-                }
-        ).setVisible(true);
+        new StudentRoomFrame().setVisible(true);
     }
 
     private void openFees() {
-
-        new ModuleFrame(
-                "Fees",
-                new String[]{
-                        "View Fee Details",
-                        "View Payment Status"
-                }
-        ).setVisible(true);
+        new StudentFeesFrame().setVisible(true);
     }
 
     private void openComplaints() {
-
-        new ModuleFrame(
-                "My Complaints",
-                new String[]{
-                        "Submit Complaint",
-                        "View My Complaints"
-                }
-        ).setVisible(true);
+        new StudentComplaintsFrame().setVisible(true);
     }
 
     private void logout() {

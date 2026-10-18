@@ -5,13 +5,11 @@ use hostel_db;
 CREATE TABLE IF NOT EXISTS users (
     user_id INT PRIMARY KEY AUTO_INCREMENT,
     full_name VARCHAR(100) NOT NULL,
-    username VARCHAR(50) NOT NULL UNIQUE,
+    username VARCHAR(50) NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     role ENUM('ADMIN', 'STUDENT') NOT NULL,
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
-DELETE FROM users WHERE username = 'harshit1103';
 
 SELECT * FROM users;
