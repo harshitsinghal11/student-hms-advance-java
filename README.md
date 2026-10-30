@@ -1,12 +1,14 @@
 # 🏢 Student Hostel Management System (SHMS)
 
-[![Java](https://img.shields.io/badge/Java-21-orange.svg)](https://www.oracle.com/java/)
+[![Java](https://img.shields.io/badge/Java-21%20LTS-orange.svg)](https://www.oracle.com/java/)
 [![Database](https://img.shields.io/badge/Database-MySQL%208.0+-blue.svg)](https://www.mysql.com/)
-[![GUI](https://img.shields.io/badge/GUI-Java%20Swing-lightgrey.svg)]()
+[![Architecture](https://img.shields.io/badge/Architecture-Web%20MVC-brightgreen.svg)]()
+[![Web Tech](https://img.shields.io/badge/Web-Java%20Servlets%20%7C%20JSP-red.svg)]()
+[![Server](https://img.shields.io/badge/Server-Apache%20Tomcat-yellow.svg)]()
 [![Security](https://img.shields.io/badge/Security-PBKDF2--HMAC--SHA256-green.svg)]()
 [![SDG](https://img.shields.io/badge/SDG%20Goals-SDG%209%20%7C%20SDG%2016-purple.svg)]()
 
-> A robust, role-based Java application designed to digitize, streamline, and secure hostel operations—including room allocations, student records, fee tracking, grievance handling, and automated reporting.
+> A robust, role-based Java application designed to digitize, streamline, and secure hostel operations—including room allocations, student records, fee tracking, grievance handling, and automated reporting. Engineered across a complete 3-phase evolutionary roadmap from secure CLI/Swing desktop modules to an enterprise Web MVC architecture.
 
 ---
 
@@ -15,18 +17,27 @@
 2. [Problem Statement](#-problem-statement)
 3. [Expected Outcomes](#-expected-outcomes)
 4. [Alignment with UN Sustainable Development Goals (SDGs)](#-alignment-with-un-sustainable-development-goals-sdgs)
-5. [Course Syllabus Alignment](#-course-syllabus-alignment)
+5. [Course Syllabus Alignment (Sections A, B, C, D)](#-course-syllabus-alignment)
 6. [3-Phase Development Roadmap](#-3-phase-development-roadmap)
-7. [What Has Been Implemented (Phase 1 Status)](#-what-has-been-implemented-phase-1-status)
-8. [System Architecture & Visual Diagrams](#-system-architecture--visual-diagrams)
-   - [Diagram 1: Functional Decomposition Diagram (FDD)](#diagram-1-functional-decomposition-diagram-fdd)
-   - [Diagram 2: UML Class Diagram](#diagram-2-uml-class-diagram)
-   - [Diagram 3: Entity-Relationship (ER) Diagram](#diagram-3-entity-relationship-er-diagram)
-9. [Project Directory & Package Structure](#-project-directory--package-structure)
-10. [Technologies & Tools Used](#-technologies--tools-used)
-11. [Installation & Setup Guide](#-installation--setup-guide)
-12. [Usage & Workflow](#-usage--workflow)
-13. [Contributors & Acknowledgments](#-contributors--acknowledgments)
+7. [Phase 1 Implementation Status (Completed)](#-phase-1-implementation-status-completed)
+8. [Phase 2 Implementation Status (Completed)](#-phase-2-implementation-status-completed)
+9. [Phase 3 Web Architecture & Implementation (Active)](#-phase-3-web-architecture--implementation-active)
+   - [9.1 Architectural Overview: Desktop Swing to Web MVC](#91-architectural-overview-desktop-swing-to-web-mvc)
+   - [9.2 Servlet Architecture & Lifecycle Mapping](#92-servlet-architecture--lifecycle-mapping)
+   - [9.3 Request-Response Lifecycle & Session Management](#93-request-response-lifecycle--session-management)
+   - [9.4 JSP Presentation Layer & Implicit Objects](#94-jsp-presentation-layer--implicit-objects)
+   - [9.5 Web Security Filters & Role Authorization](#95-web-security-filters--role-authorization)
+   - [9.6 Academic Viva & Theory Guide: Servlets/JSP vs. Spring Boot & Hibernate](#96-academic-viva--theory-guide-servletsjsp-vs-spring-boot--hibernate)
+10. [System Architecture & Visual Diagrams](#-system-architecture--visual-diagrams)
+    - [Diagram 1: Functional Decomposition Diagram (FDD)](#diagram-1-functional-decomposition-diagram-fdd)
+    - [Diagram 2: UML Class Diagram](#diagram-2-uml-class-diagram)
+    - [Diagram 3: Entity-Relationship (ER) Diagram](#diagram-3-entity-relationship-er-diagram)
+    - [Diagram 4: Web MVC Request-Response Sequence Diagram](#diagram-4-web-mvc-request-response-sequence-diagram)
+11. [Project Directory & Package Structure](#-project-directory--package-structure)
+12. [Technologies & Tools Used](#-technologies--tools-used)
+13. [Installation & Setup Guide](#-installation--setup-guide)
+14. [Usage & Workflow](#-usage--workflow)
+15. [Contributors & Acknowledgments](#-contributors--acknowledgments)
 
 ---
 
@@ -56,8 +67,9 @@ Hostels in educational institutions frequently face administrative bottlenecks d
 - **Centralized Student & Hostel Records:** Eliminates physical registers with a single persistent MySQL database.
 - **Efficient Room Allocation & Occupancy Management:** Real-time visibility into occupied, partially occupied, and vacant rooms with one-click bed allotment.
 - **Role-Based Access & High-Grade Security:** Clear isolation between administrative privileges and student self-service functionalities, backed by salted PBKDF2 password cryptography.
-- **Transparent Fee & Complaint Tracking:** Real-time fee clearance indicators, automated receipt logging, and a systematic status lifecycle for student complaints (Pending ➔ In Progress ➔ Resolved).
+- **Transparent Fee & Complaint Tracking:** Real-time fee clearance indicators, automated receipt logging, and a systematic status lifecycle for student complaints (`PENDING` ➔ `IN_PROGRESS` ➔ `RESOLVED`).
 - **Automated Hostel Reports:** Instant generation of reports for audit inspections, occupancy status, student demographics, and pending dues.
+- **Universal Multi-Platform Accessibility:** Transition from desktop-bound Windows software to a universal web browser interface accessible across laptops, tablets, and mobile devices.
 
 ---
 
@@ -94,16 +106,21 @@ The implementation of this project is structured to strictly reflect and apply e
 │                     │ • Swing Components & Dialogs    │   `ActionListener`, lambda handlers │
 │                     │ • Event Dispatch Thread (EDT)   │ • `SwingUtilities.invokeLater()`    │
 ├─────────────────────┼─────────────────────────────────┼─────────────────────────────────────┤
-│ Section-C:          │ • `java.sql` Architecture       │ • Persistent connection via         │
+│ Section-C:          │ • java.sql Architecture         │ • Persistent connection via         │
 │ Database            │ • PreparedStatement & ResultSet │   `DBConnection` & JDBC MySQL Driver│
 │ Connectivity &      │ • SQL Exception Handling        │ • SQL Injection prevention via      │
 │ Networking          │ • Cryptographic Hashing         │   parameterized queries             │
-│                     │ • Client-Server Networking      │ • Phase 2/3 socket & network audits │
+│                     │ • Client-Server Networking      │ • Sockets & TCP/HTTP abstractions   │
 ├─────────────────────┼─────────────────────────────────┼─────────────────────────────────────┤
-│ Section-D:          │ • Java Servlets (Lifecycle,     │ • Complete Phase 3 Web migration    │
-│ Web Development,    │   HttpServletRequest/Response)  │ • Model-View-Controller (MVC)       │
-│ JSP & Frameworks    │ • JSP Directives, Actions, JSTL │ • Session management across web     │
-│                     │ • Spring Boot / Hibernate       │ • Hibernate ORM entity mappings     │
+│ Section-D:          │ • Java Servlets: Lifecycle,     │ • Complete Phase 3 Web MVC app      │
+│ Java Servlets,      │   Architecture, ServletConfig,  │ • AuthFilter, AuthServlet,          │
+│ JSP & Frameworks    │   ServletContext, GenericServlet│   RoomServlet, AllocationServlet,   │
+│                     │ • HttpServletRequest/Response,  │   FeeServlet, ComplaintServlet      │
+│                     │   GET, POST, Session Management │ • HttpSession, Cookie authentication│
+│                     │ • JavaServer Pages (JSP):       │ • JSP Directives, JSTL tags,        │
+│                     │   Lifecycle, Implicit Objects,  │   EL expressions, Shared Data       │
+│                     │   Directives, Actions           │ • Architectural comparison with     │
+│                     │ • Spring, Spring Boot, Hibernate│   Spring Boot & Hibernate           │
 └─────────────────────┴─────────────────────────────────┴─────────────────────────────────────┘
 ```
 
@@ -132,18 +149,20 @@ The project is executed across three planned phases to achieve enterprise scalab
         │     • Transactional workflows: Room Allocation, Fee Receipts, Complaint Updates
         │     • Automated analytical hostel reports (Demographics, Occupancy, Fees, Complaints)
         │
-        └───► [PHASE 3] Enterprise Web Application Migration (FINAL PHASE 🌐)
-              • Migration from Desktop Swing to Web MVC Architecture
-              • Servlets, JSP, and JSTL implementation for web browsers
-              • HTTP Session tracking and Web Security Filters
-              • Spring Boot & Hibernate ORM integration for RESTful scalability
+        └───► [PHASE 3] Enterprise Web Application Migration (ACTIVE / CURRENT 🌐)
+              • Transition from Desktop Swing to Web MVC Architecture
+              • Java Servlets (`HttpServlet`, `doGet`, `doPost`, `ServletConfig`, `ServletContext`)
+              • Web Session tracking via `HttpSession` and security filters (`AuthFilter`)
+              • JavaServer Pages (JSP) with Expression Language (EL), JSTL, and implicit objects
+              • Professional, responsive UI built with standardized design tokens in `global.css`
+              • Academic & Architectural mapping to Spring Boot and Hibernate ORM
 ```
 
 ---
 
-## ✅ What Has Been Implemented (Phase 1 Status)
+## ✅ Phase 1 Implementation Status (Completed)
 
-As of **Phase 1**, the complete foundational framework has been engineered and verified:
+As of **Phase 1**, the complete foundational framework was engineered and verified:
 
 1. **Database Connection Management (`DBConnection.java`):**
    - Implements a resilient connection factory using `java.sql.DriverManager`.
@@ -186,9 +205,9 @@ As of **Phase 1**, the complete foundational framework has been engineered and v
 
 ---
 
-## 🚀 What Has Been Implemented (Phase 2 Status)
+## 🚀 Phase 2 Implementation Status (Completed)
 
-In **Phase 2**, the complete desktop application and relational database operations have been fully engineered:
+In **Phase 2**, the complete desktop application and relational database operations were fully engineered:
 
 1. **Relational Database Expansion (`phase2_schema.sql`):**
    - Implemented 5 relational tables (`students`, `rooms`, `allocations`, `fees`, `complaints`) with foreign key constraints, cascading deletions, and data integrity guarantees.
@@ -215,6 +234,182 @@ In **Phase 2**, the complete desktop application and relational database operati
    - **`StudentRoomFrame.java`**: Real-time view of allocated room number, block, capacity, current roommates, and monthly fee.
    - **`StudentFeesFrame.java`**: Live status of fee invoices, payment receipts, and outstanding dues.
    - **`StudentComplaintsFrame.java`**: Form to submit maintenance grievances with category tags and track resolution statuses.
+
+---
+
+## 🌐 Phase 3 Web Architecture & Implementation (Active)
+
+In **Phase 3**, the system transitions from desktop-bound Java Swing software into a universal **Web Application** powered by **Java Servlets, JavaServer Pages (JSP), and the Model-View-Controller (MVC)** architectural pattern, strictly fulfilling **Section D** of the Advanced Java university syllabus.
+
+### 9.1 Architectural Overview: Desktop Swing to Web MVC
+
+```
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│                                 PHASE 3 WEB MVC TOPOLOGY                               │
+├────────────────────────────────────────────────────────────────────────────────────────┤
+│                                                                                        │
+│   [ Client Browser ]  (Chrome / Edge / Firefox / Mobile)                               │
+│           │                                                                            │
+│       HTTP Requests (GET, POST)                                                        │
+│           ▼                                                                            │
+│   ┌────────────────────────────────────────────────────────────────────────────────┐   │
+│   │                          WEB CONTAINER (Apache Tomcat)                         │   │
+│   │                                                                                │   │
+│   │   [ Security Filter Layer ]                                                    │   │
+│   │   • AuthFilter / LoggingFilter (Checks HttpSession, intercepts unauthorized)   │   │
+│   │           │                                                                    │   │
+│   │           ▼                                                                    │   │
+│   │   [ Controller Layer (Java Servlets) ]                                         │   │
+│   │   • AuthServlet        • AdminServlet         • StudentServlet                 │   │
+│   │   • RoomServlet        • AllocationServlet    • FeeServlet                     │   │
+│   │   • ComplaintServlet   • ReportServlet                                         │   │
+│   │           │                                      │                             │   │
+│   │      Calls Service/DAO                      Forwards Model                     │   │
+│   │           │                                      │                             │   │
+│   │           ▼                                      ▼                             │   │
+│   │   [ Model & DAO Layer ]                  [ View Layer (JSP & JSTL) ]           │   │
+│   │   • Reused Phase 2 DAOs                  • login.jsp, register.jsp             │   │
+│   │   • Domain Entities                      • admin/dashboard.jsp, rooms.jsp      │   │
+│   │   • DBConnection (JDBC)                  • student/dashboard.jsp, fees.jsp     │   │
+│   │           │                              • global.css & script.js              │   │
+│   │           ▼                                      │                             │   │
+│   │   [ MySQL Database: hostel_db ]                  │                             │   │
+│   │                                                  ▼                             │   │
+│   │                                          Renders HTML5 Output                  │   │
+│   └──────────────────────────────────────────────────┼─────────────────────────────┘   │
+│                                                      ▼                                 │
+│                                            HTTP Response (HTML/CSS)                    │
+│                                                      ▼                                 │
+│                                              [ Client Display ]                        │
+└────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+### 9.2 Servlet Architecture & Lifecycle Mapping
+
+Every servlet in Phase 3 extends `jakarta.servlet.http.HttpServlet` (or `javax.servlet.http.HttpServlet`) and implements the standard servlet lifecycle:
+
+```
+[Servlet Class Loaded] ➔ init(ServletConfig) ➔ service() [dispatches doGet/doPost] ➔ destroy()
+```
+
+1. **`init(ServletConfig config)`**: Executed once when the servlet is first initialized. Retrieves servlet-specific parameters via `ServletConfig` and global application context parameters via `ServletContext`.
+2. **`service(HttpServletRequest req, HttpServletResponse resp)`**: Evaluates the HTTP request method and delegates to either `doGet()` or `doPost()`.
+3. **`doGet(HttpServletRequest req, HttpServletResponse resp)`**: Handles idempotent read requests:
+   - Rendering dashboard pages
+   - Fetching room inventories and complaint lists
+   - Displaying student profiles and fee summaries
+4. **`doPost(HttpServletRequest req, HttpServletResponse resp)`**: Handles state-mutating transactions:
+   - Form submission for login and registration
+   - Room allocation and vacation operations
+   - Recording fee payments and filing maintenance grievances
+5. **`destroy()`**: Invoked by the web container prior to taking the servlet out of service, releasing database and I/O resources.
+
+#### Servlet Configuration & Context Sharing:
+- **`ServletConfig`**: Provides initialization parameters configured per servlet in `web.xml` (or via `@WebServlet(initParams = ...)`).
+- **`ServletContext`**: Shared application-wide context (`getServletContext()`) used for sharing global resources (database connection pool references, application-level settings) across all servlets.
+
+---
+
+### 9.3 Request-Response Lifecycle & Session Management
+
+- **Request Parsing (`HttpServletRequest`):**
+  - Form field extraction using `request.getParameter("paramName")`.
+  - Request attribute binding for views using `request.setAttribute("attributeName", object)`.
+  - Reading client headers, cookies, and HTTP methods.
+- **Response Dispatching (`HttpServletResponse`):**
+  - View forwarding: `request.getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(request, response)`.
+  - Client-side redirect: `response.sendRedirect(request.getContextPath() + "/login?error=auth")`.
+- **Session Tracking (`HttpSession`):**
+  - Replaces the desktop in-memory singleton ([Session.java](file:///c:/Harshit/mruLABS/studentHostelManagementSystem/src/com/hostelmanagement/session/Session.java)).
+  - Sessions are tracked per browser using the standard `JSESSIONID` cookie.
+  - User session creation on valid login:
+    ```java
+    HttpSession session = request.getSession(true);
+    session.setAttribute("currentUser", authenticatedUser);
+    session.setAttribute("userRole", authenticatedUser.getRole());
+    ```
+  - Invalidation on logout: `session.invalidate()`.
+
+---
+
+### 9.4 JSP Presentation Layer & Implicit Objects
+
+JavaServer Pages (JSP) serve as the **View** tier, rendering dynamic HTML while encapsulating business logic strictly in the Servlets.
+
+#### JSP Implicit Objects Utilized in SHMS:
+- **`request`** (`HttpServletRequest`): Accesses request attributes passed from Servlets (e.g., student lists, room lists).
+- **`response`** (`HttpServletResponse`): Modifies response headers or content types.
+- **`session`** (`HttpSession`): Reads logged-in user credentials and active role.
+- **`application`** (`ServletContext`): Accesses application-scope parameters.
+- **`out`** (`JspWriter`): Outputs content to the response stream.
+- **`pageContext`** (`PageContext`): Manages page-scope variables and tag handler environments.
+
+#### JSP Syntax, Directives & JSTL Tags:
+- **Directives:** Page directives for imports and encoding (`<%@ page contentType="text/html;charset=UTF-8" language="java" %>`).
+- **JSTL Core Tags (`c:forEach`, `c:if`, `c:choose`):**
+  - Iterating over lists without scriptlets:
+    ```jsp
+    <c:forEach var="room" items="${roomList}">
+        <tr>
+            <td>${room.roomNumber}</td>
+            <td>${room.blockWing}</td>
+            <td><span class="badge ${room.roomStatus}">${room.roomStatus}</span></td>
+        </tr>
+    </c:forEach>
+    ```
+- **Expression Language (EL):** Clean data retrieval syntax (`${currentUser.fullName}`, `${student.rollNumber}`).
+
+---
+
+### 9.5 Web Security Filters & Role Authorization
+
+To prevent unauthorized direct URL access (e.g., a student typing `/admin/rooms` into the browser bar), an **`AuthFilter`** implementing `jakarta.servlet.Filter` guards protected routes:
+
+```java
+// Logic inside AuthFilter.doFilter()
+HttpSession session = httpRequest.getSession(false);
+User user = (session != null) ? (User) session.getAttribute("currentUser") : null;
+
+if (user == null && isProtectedPath(requestURI)) {
+    httpResponse.sendRedirect(httpRequest.getContextPath() + "/login");
+} else if (requestURI.startsWith("/admin") && !"ADMIN".equals(user.getRole())) {
+    httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied: Admin Privileges Required");
+} else {
+    chain.doFilter(request, response);
+}
+```
+
+---
+
+### 9.6 Academic Viva & Theory Guide: Servlets/JSP vs. Spring Boot & Hibernate
+
+In university academic evaluations and lab vivas, students are frequently asked about the theoretical and architectural relationship between traditional Servlets/JSP and modern enterprise frameworks:
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                    EVOLUTIONARY COMPARISON: SERVLETS/JSP vs. MODERN FRAMEWORKS                  │
+├─────────────────────┬─────────────────────────────────────┬─────────────────────────────────────┤
+│ Dimension           │ Traditional: Servlets & JSP (SHMS)  │ Modern: Spring Boot & Hibernate     │
+├─────────────────────┼─────────────────────────────────────┼─────────────────────────────────────┤
+│ Architecture        │ Explicit MVC with `HttpServlet`,    │ Declarative MVC with `@Controller`, │
+│                     │ manual `doGet`/`doPost` routing     │ `@RestController`, `@GetMapping`    │
+├─────────────────────┼─────────────────────────────────────┼─────────────────────────────────────┤
+│ Core Engine         │ Direct execution on Servlet API     │ `DispatcherServlet` internally      │
+│                     │ container (Tomcat)                  │ delegates to controller beans       │
+├─────────────────────┼─────────────────────────────────────┼─────────────────────────────────────┤
+│ Persistence         │ Direct JDBC via `PreparedStatement` │ Object-Relational Mapping (ORM) via │
+│                     │ and manual DAO result set mapping   │ Hibernate `@Entity` & Spring Data   │
+├─────────────────────┼─────────────────────────────────────┼─────────────────────────────────────┤
+│ Server Model        │ Deployed to Web Container / Server  │ Embedded Tomcat bundled inside JAR  │
+├─────────────────────┼─────────────────────────────────────┼─────────────────────────────────────┤
+│ Academic Benefit    │ Transparent: Every HTTP lifecycle   │ High abstraction: Core web concepts │
+│                     │ stage is visible in source code     │ are hidden behind annotations       │
+└─────────────────────┴─────────────────────────────────────┴─────────────────────────────────────┘
+```
+
+> **Viva Insight:** *"Spring Boot does not replace Java Servlets—it builds on top of them. Spring's `DispatcherServlet` is an `HttpServlet` that handles front-controller routing. Understanding Servlets and JSP gives the exact foundational understanding of how web requests, headers, and sessions work before Spring abstracts them with annotations."*
 
 ---
 
@@ -312,7 +507,7 @@ classDiagram
     direction TB
 
     %% ==========================================
-    %% TIER 1: PRESENTATION LAYER (GUI)
+    %% TIER 1: PRESENTATION LAYER (GUI & WEB)
     %% ==========================================
     class LoginFrame {
         -JTextField usernameField
@@ -339,9 +534,23 @@ classDiagram
         +logout()
     }
 
-    class ModuleFrame {
-        -String moduleName
-        +displayModuleActions()
+    class AuthServlet {
+        +doGet(req, resp)
+        +doPost(req, resp)
+    }
+
+    class AdminServlet {
+        +doGet(req, resp)
+        +doPost(req, resp)
+    }
+
+    class StudentServlet {
+        +doGet(req, resp)
+        +doPost(req, resp)
+    }
+
+    class AuthFilter {
+        +doFilter(req, resp, chain)
     }
 
     %% ==========================================
@@ -353,37 +562,42 @@ classDiagram
         +changePassword(userId, oldPass, newPass) boolean
     }
 
-    class StudentService {
+    class StudentDAO {
+        +getAllStudents() List~Student~
+        +getStudentById(int id) Student
         +addStudent(Student) boolean
         +updateStudent(Student) boolean
-        +deleteStudent(int studentId) boolean
-        +searchStudent(String query) List~Student~
+        +deleteStudent(int id) boolean
     }
 
-    class RoomService {
+    class RoomDAO {
+        +getAllRooms() List~Room~
+        +getAvailableRooms() List~Room~
         +addRoom(Room) boolean
         +updateRoom(Room) boolean
-        +allocateRoom(int studentId, int roomId) boolean
-        +vacateRoom(int allocationId) boolean
-        +getAvailableRooms() List~Room~
     }
 
-    class FeeService {
-        +recordFee(Fee) boolean
-        +recordPayment(int feeId, double amount) boolean
+    class AllocationDAO {
+        +allocateRoom(studentId, roomId) boolean
+        +vacateRoom(allocationId) boolean
+        +getActiveAllocations() List~Allocation~
+    }
+
+    class FeeDAO {
+        +getFeesByStudent(studentId) List~Fee~
+        +recordPayment(feeId, amount) boolean
         +getPendingFees() List~Fee~
     }
 
-    class ComplaintService {
+    class ComplaintDAO {
         +submitComplaint(Complaint) boolean
-        +updateStatus(int complaintId, String status) boolean
-        +getComplaintsByStudent(int studentId) List~Complaint~
+        +updateStatus(complaintId, status, remarks) boolean
+        +getAllComplaints() List~Complaint~
     }
 
-    class ReportService {
-        +generateOccupancyReport()
-        +generateFeeReport()
-        +generateComplaintReport()
+    class ReportDAO {
+        +getOccupancyStats() Map
+        +getFeeCollectionStats() Map
     }
 
     %% ==========================================
@@ -441,40 +655,20 @@ classDiagram
         +getConnection() Connection
     }
 
-    %% ==========================================
-    %% HIERARCHICAL RELATIONSHIPS
-    %% ==========================================
-    %% Tier 1 Navigation
-    LoginFrame --> AdminDashboard : routes to Admin
-    LoginFrame --> StudentDashboard : routes to Student
-    AdminDashboard --> ModuleFrame : launches module
-    StudentDashboard --> ModuleFrame : launches module
+    %% Associations
+    AuthServlet ..> AuthService : invokes
+    AdminServlet ..> RoomDAO : uses
+    AdminServlet ..> AllocationDAO : uses
+    AdminServlet ..> FeeDAO : uses
+    StudentServlet ..> ComplaintDAO : uses
+    StudentServlet ..> StudentDAO : uses
 
-    %% Tier 1 to Tier 2 Invocations
-    LoginFrame ..> AuthService : invokes
-    ModuleFrame ..> StudentService : invokes
-    ModuleFrame ..> RoomService : invokes
-    ModuleFrame ..> FeeService : invokes
-    ModuleFrame ..> ComplaintService : invokes
-    ModuleFrame ..> ReportService : invokes
+    StudentDAO ..> DBConnection : queries
+    RoomDAO ..> DBConnection : queries
+    AllocationDAO ..> DBConnection : queries
+    FeeDAO ..> DBConnection : queries
+    ComplaintDAO ..> DBConnection : queries
 
-    %% Tier 2 to Tier 3 Data Operations
-    AuthService ..> User : authenticates
-    StudentService ..> Student : manages
-    RoomService ..> Room : manages
-    RoomService ..> Allocation : manages
-    FeeService ..> Fee : manages
-    ComplaintService ..> Complaint : manages
-
-    %% Tier 2 to Database
-    AuthService ..> DBConnection : queries
-    StudentService ..> DBConnection : queries
-    RoomService ..> DBConnection : queries
-    FeeService ..> DBConnection : queries
-    ComplaintService ..> DBConnection : queries
-    ReportService ..> DBConnection : queries
-
-    %% Domain Entity Associations
     User <|-- Student : extends
     Student "1" --> "*" Allocation : receives
     Room "1" --> "*" Allocation : assigned to
@@ -559,6 +753,34 @@ erDiagram
 
 ---
 
+### Diagram 4: Web MVC Request-Response Sequence Diagram
+*Illustrates the runtime interaction between Browser, AuthFilter, Controller Servlet, DAO/Service, Database, and JSP View.*
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Browser as Client Browser
+    participant Filter as AuthFilter
+    participant Servlet as AdminServlet / Controller
+    participant DAO as RoomDAO / Service
+    participant DB as MySQL (hostel_db)
+    participant View as rooms.jsp (JSP View)
+
+    Browser->>Filter: HTTP GET /admin/rooms
+    Note over Filter: Checks HttpSession for valid<br/>currentUser with role=ADMIN
+    Filter->>Servlet: forward request (Authentication OK)
+    Servlet->>DAO: getAvailableRooms() & getAllRooms()
+    DAO->>DB: SELECT * FROM rooms WHERE ...
+    DB-->>DAO: ResultSet (List<Room>)
+    DAO-->>Servlet: return List<Room>
+    Servlet->>Servlet: request.setAttribute("rooms", roomList)
+    Servlet->>View: request.getRequestDispatcher("/WEB-INF/views/admin/rooms.jsp").forward()
+    Note over View: JSTL <c:forEach> renders<br/>table rows with EL ${room.roomNumber}
+    View-->>Browser: HTTP 200 (Rendered HTML5 + CSS)
+```
+
+---
+
 ## 📁 Project Directory & Package Structure
 
 ```
@@ -578,7 +800,7 @@ studentHostelManagementSystem/
 │   ├── module-info.java                # Java Module System Descriptor (`java.desktop`, `java.sql`)
 │   │
 │   └── com/hostelmanagement/
-│       ├── Main.java                   # Application Entrypoint (Launches Swing EDT)
+│       ├── Main.java                   # Desktop Application Entrypoint (Swing EDT)
 │       │
 │       ├── auth/                       # Security & Authentication Layer
 │       │   ├── AdminSetup.java         # CLI Utility to bootstrap initial Administrator
@@ -604,10 +826,10 @@ studentHostelManagementSystem/
 │       │   ├── Student.java            # Student resident profile entity
 │       │   └── User.java               # Immutable representation of an authenticated user
 │       │
-│       ├── session/                    # In-Memory Session Management
-│       │   └── Session.java            # Thread-safe user session context holder
+│       ├── session/                    # Desktop In-Memory Session Management
+│       │   └── Session.java            # Thread-safe user session context holder (Swing)
 │       │
-│       ├── ui/                         # Presentation Layer (Java Swing GUI)
+│       ├── ui/                         # Desktop Presentation Layer (Java Swing GUI)
 │       │   ├── AdminDashboard.java     # Warden & Admin control panel
 │       │   ├── ChangePasswordDialog.java # Self-service password update modal
 │       │   ├── ComplaintManagementFrame.java # Admin complaint resolution dashboard
@@ -625,21 +847,77 @@ studentHostelManagementSystem/
 │       │   ├── StudentProfileFrame.java# Student profile view and contact updater
 │       │   └── StudentRoomFrame.java   # Student allocated room and roommate details
 │       │
-│       └── util/                       # Reusable UI & Application Utilities
-│           └── UIUtils.java            # Standardized button styling, table renderer, dialogs
+│       ├── util/                       # Reusable UI & Application Utilities
+│       │   └── UIUtils.java            # Standardized button styling, table renderer, dialogs
+│       │
+│       └── web/                        # Phase 3 Web Layer (Servlets, Filters, Listeners)
+│           ├── filter/                 # Web Security & Authentication Filters
+│           │   ├── AuthFilter.java     # Role-based route guard for /admin/* and /student/*
+│           │   └── EncodingFilter.java # UTF-8 Character encoding filter
+│           │
+│           ├── listener/               # Application Lifecycle Listeners
+│           │   └── AppContextListener.java # Global ServletContext initialization
+│           │
+│           └── servlet/                # Web Controllers (HTTP Request Handlers)
+│               ├── AuthServlet.java    # /login, /register, /logout, /change-password
+│               ├── AdminServlet.java   # /admin/dashboard, /admin/analytics
+│               ├── StudentServlet.java # /student/dashboard, /student/profile
+│               ├── RoomServlet.java    # /admin/rooms (CRUD, status filter)
+│               ├── AllocationServlet.java # /admin/allocations (allot, transfer, vacate)
+│               ├── FeeServlet.java     # /admin/fees & /student/fees
+│               ├── ComplaintServlet.java # /admin/complaints & /student/complaints
+│               └── ReportServlet.java  # /admin/reports (Occupancy, dues, demographics)
 │
-└── bin/                                # Compiled Bytecode (.class files)
+├── webcontent/                         # Web Application Root Directory
+│   ├── index.jsp                       # Root landing page (redirects to login)
+│   ├── css/
+│   │   └── global.css                  # Standardized color tokens, light/dark themes
+│   ├── js/
+│   │   └── main.js                     # Client-side validation, modals, dynamic filters
+│   │
+│   └── WEB-INF/                        # Secure Private Web Resources
+│       ├── web.xml                     # Web Application Deployment Descriptor
+│       └── views/                      # Protected JSP Templates (Not directly accessible via URL)
+│           ├── common/
+│           │   ├── header.jsp          # Reusable header with user banner & navigation
+│           │   └── footer.jsp          # Standardized footer & script imports
+│           ├── auth/
+│           │   ├── login.jsp           # Web Login interface
+│           │   ├── register.jsp        # Student registration form
+│           │   └── change-password.jsp # Password update modal/view
+│           ├── admin/
+│           │   ├── dashboard.jsp       # Warden overview with metric cards
+│           │   ├── students.jsp        # Searchable student directory table
+│           │   ├── rooms.jsp           # Room management & occupancy cards
+│           │   ├── allocations.jsp     # Bed assignment & vacation console
+│           │   ├── fees.jsp            # Fee invoice ledger & payment recorder
+│           │   ├── complaints.jsp      # Grievance inbox with status updater
+│           │   └── reports.jsp         # Visual analytical report tables
+│           └── student/
+│               ├── dashboard.jsp       # Student personal overview
+│               ├── profile.jsp         # Academic & contact details view/edit
+│               ├── room.jsp            # Allocated room details & roommates
+│               ├── fees.jsp            # Fee dues & payment receipts ledger
+│               └── complaints.jsp      # Complaint submission & tracking
+│
+└── bin/                                # Compiled Bytecode (.class files, ignored by Git)
 ```
 
 ---
 
 ## 🛠 Technologies & Tools Used
 
-- **Programming Language:** Java 21 (LTS)
-- **Graphical User Interface (GUI):** Java Swing & AWT (`BorderLayout`, `GridBagLayout`, `GridLayout`)
+- **Programming Language:** Java 21 (LTS) & Java 25
+- **Web Technologies:**
+  - **Servlet API:** Java Servlets (`jakarta.servlet` / `javax.servlet`, `HttpServlet`, `HttpServletRequest`, `HttpServletResponse`, `ServletConfig`, `ServletContext`)
+  - **Server-Side Templating:** JavaServer Pages (JSP), JavaServer Pages Standard Tag Library (JSTL Core, Format), Expression Language (EL)
+  - **Web Security:** `jakarta.servlet.Filter` (`AuthFilter`) with `HttpSession` cookie tracking
+- **Graphical User Interface (GUI - Desktop):** Java Swing & AWT (`BorderLayout`, `GridBagLayout`, `GridLayout`)
+- **Web Styling & Frontend:** HTML5, CSS3 with unified design tokens (`global.css`), Vanilla JavaScript (ES6)
 - **Database:** MySQL 8.0+
 - **Database Driver:** MySQL Connector/J (`mysql-connector-j-9.x.jar`)
 - **Cryptography / Hashing:** `PBKDF2WithHmacSHA256` (Java Cryptography Extension)
+- **Application Server / Container:** Apache Tomcat (Embedded / Standalone)
 - **Build / IDE:** Eclipse IDE / Antigravity CLI / Visual Studio Code
 - **Version Control:** Git & GitHub
 
@@ -648,9 +926,14 @@ studentHostelManagementSystem/
 ## ⚙️ Installation & Setup Guide
 
 ### 1. Prerequisites
-- **Java Development Kit (JDK 21 or higher)** installed and added to your system `PATH`.
-- **MySQL Server (v8.0 or higher)** installed and running.
-- **MySQL Connector/J JAR** placed in the project classpath.
+- **Java Development Kit (JDK 21 or higher)** installed and verified:
+  ```bash
+  java -version
+  javac -version
+  ```
+- **MySQL Server (v8.0 or higher)** running on `localhost:3306`.
+- **MySQL Connector/J JAR** placed in the classpath / `WEB-INF/lib/`.
+- **Apache Tomcat 10+** (or embedded runner).
 
 ---
 
@@ -659,42 +942,29 @@ studentHostelManagementSystem/
    ```bash
    mysql -u root -p
    ```
-2. Execute the script located in `MySQL Database/users.sql`:
-   ```sql
-   CREATE DATABASE IF NOT EXISTS hostel_db;
-   USE hostel_db;
-
-   CREATE TABLE IF NOT EXISTS users (
-       user_id INT PRIMARY KEY AUTO_INCREMENT,
-       full_name VARCHAR(100) NOT NULL,
-       username VARCHAR(50) NOT NULL UNIQUE,
-       password_hash VARCHAR(255) NOT NULL,
-       role ENUM('ADMIN', 'STUDENT') NOT NULL,
-       is_active BOOLEAN NOT NULL DEFAULT TRUE,
-       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-   );
-   ```
+2. Execute the initialization scripts in sequence:
+   - Run `MySQL Database/users.sql` to initialize `hostel_db` and the `users` table.
+   - Run `MySQL Database/phase2_schema.sql` to create `students`, `rooms`, `allocations`, `fees`, and `complaints` tables.
 
 ---
 
 ### 3. Database Credentials Configuration
-Open [DBConnection.java](file:///c:/Harshit/mruLABS/studentHostelManagementSystem/src/com/hostelmanagement/database/DBConnection.java) and verify your local MySQL credentials:
+Open [DBConnection.java](file:///c:/Harshit/mruLABS/studentHostelManagementSystem/src/com/hostelmanagement/database/DBConnection.java) and verify your local credentials:
 ```java
 private static final String URL = "jdbc:mysql://localhost:3306/hostel_db";
 private static final String DB_USER = "root";
-private static final String DB_PASSWORD = "your_mysql_password"; // Set your password
+private static final String DB_PASSWORD = "your_mysql_password"; // Set your local password
 ```
 
 ---
 
 ### 4. Create the First Admin Account
-Before launching the graphical application, create the root Administrator account using the command-line utility:
-
-- Run `com.hostelmanagement.auth.AdminSetup`:
+Before launching either the desktop or web interface, provision the root Administrator account using the command-line utility:
+- Execute `com.hostelmanagement.auth.AdminSetup`:
   ```bash
-  # Inside your IDE: Right click AdminSetup.java -> Run As -> Java Application
+  # Inside your IDE: Run com.hostelmanagement.auth.AdminSetup
   ```
-- Follow the interactive prompts:
+- Enter your admin credentials interactively:
   ```text
   Admin full name: Chief Warden
   Admin username: admin
@@ -704,42 +974,42 @@ Before launching the graphical application, create the root Administrator accoun
 
 ---
 
-### 5. Launch the Application
-Run the primary entry point:
-- Execute `com.hostelmanagement.Main`
-- The `LoginFrame` will appear on screen.
+### 5. Running the Application
+
+#### Option A: Running the Web Application (Phase 3 - Recommended)
+1. Deploy the project folder to Apache Tomcat, or run using your IDE's web server configuration.
+2. Open your web browser and navigate to:
+   ```
+   http://localhost:8080/studentHostelManagementSystem/
+   ```
+3. The responsive Web Login page will appear.
+
+#### Option B: Running the Desktop Application (Phase 1 & 2)
+1. Execute `com.hostelmanagement.Main`.
+2. The Swing desktop `LoginFrame` will appear.
 
 ---
 
 ## 🖥 Usage & Workflow
 
 ### 1. Student Registration
-- Click **"Register as Student"** on the Login screen.
-- Fill in Full Name, Username, and Password (min 8 chars).
-- Submit the form. On success, log in with the new credentials.
+- Open the web application and click **"Register as Student"**.
+- Provide Full Name, Username, and Password (min 8 characters).
+- Upon submission, `AuthServlet` validates input, hashes the password with PBKDF2, saves the record via `AuthService`, and redirects to login with a success notice.
 
 ### 2. Role-Based Navigation
 - **Logging in as Student:**
-  - Routes directly to `StudentDashboard`.
-  - Access personal Profile, View Room Details, Check Fee Status, and Submit Complaints.
+  - Authenticated and session assigned: `session.setAttribute("userRole", "STUDENT")`.
+  - Routes directly to `/student/dashboard`.
+  - Accessible modules: View Allocated Room details, Check Monthly Fees and Receipts, Submit Maintenance Complaints, and Update Profile.
 - **Logging in as Admin / Warden:**
-  - Routes directly to `AdminDashboard`.
-  - Access comprehensive administrative controls: Student records, Room creation & allocation, Fee tracking, Complaint resolution, and Master Reports.
+  - Authenticated and session assigned: `session.setAttribute("userRole", "ADMIN")`.
+  - Routes directly to `/admin/dashboard`.
+  - Full administrative access: Manage Student Directory, Configure Rooms & Bed Capacities, Allot & Vacate Rooms, Record Fee Payments, Resolve Complaints, and Generate Real-Time Analytical Reports.
 
-### 3. Logout
-- Click the **"Logout"** button on the top-right of either dashboard to securely clear the current session and return to the Login screen.
-
----
-
-## 🔮 What's Next? (Phase 2 & Phase 3 Roadmap)
-
-| Module | Phase 2 Scope (Desktop CRUD & DAOs) | Phase 3 Scope (Web App & Servlets/JSP) |
-| :--- | :--- | :--- |
-| **Student Management** | Add/Edit/Delete students, dynamic table view with filter by course/batch. | Responsive web forms, REST API for student profiles. |
-| **Room Allocation** | Interactive room occupancy matrix, one-click bed assignment. | Web-based room selection portal for prospective students. |
-| **Fee Management** | Receipt generation, overdue fee alerts, record direct payments. | Online payment gateway integration, downloadable PDF receipts. |
-| **Complaints** | Real-time complaint inbox for wardens with status toggle. | Ticket-tracking web dashboard with student notification emails. |
-| **Reports** | Printable tabular reports exported as CSV/PDF. | Dynamic web analytics dashboard with charting libraries. |
+### 3. Secure Session Termination
+- Click **"Logout"** on the navigation banner.
+- The servlet invokes `session.invalidate()` to completely destroy the `HttpSession` and clears browser cookies, redirecting securely back to `/login`.
 
 ---
 
@@ -747,4 +1017,8 @@ Run the primary entry point:
 
 - **Developed By:** Harshit Singhal
 - **Academic Program:** Bachelor of Technology (Computer Science & Engineering) / Advanced Java Lab
-- **Course Alignment:** Advanced Java Programming (Core OOPS, Swing GUI, JDBC & Sockets, Servlets & JSP)
+- **Course Alignment:** Advanced Java Programming:
+  - Section-A: Core OOP, Encapsulation, Collections
+  - Section-B: Swing GUI, Event Delegation Model
+  - Section-C: JDBC `java.sql` Architecture, Security Hashing
+  - Section-D: Java Servlets, JSP, JSTL, Web MVC, and Enterprise Frameworks (Spring Boot / Hibernate)
