@@ -14,6 +14,14 @@ public class DBConnection {
     // Replace with your actual local MySQL password.
     private static final String DB_PASSWORD = "0301";
 
+    static {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+        } catch (ClassNotFoundException e) {
+            System.err.println("MySQL JDBC Driver not found in classpath: " + e.getMessage());
+        }
+    }
+
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(
                 URL,
