@@ -149,7 +149,7 @@ The project is executed across three planned phases to achieve enterprise scalab
         │     • Transactional workflows: Room Allocation, Fee Receipts, Complaint Updates
         │     • Automated analytical hostel reports (Demographics, Occupancy, Fees, Complaints)
         │
-        └───► [PHASE 3] Enterprise Web Application Migration (ACTIVE / CURRENT 🌐)
+        └───► [PHASE 3] Enterprise Web Application Migration (COMPLETED ✅)
               • Transition from Desktop Swing to Web MVC Architecture
               • Java Servlets (`HttpServlet`, `doGet`, `doPost`, `ServletConfig`, `ServletContext`)
               • Web Session tracking via `HttpSession` and security filters (`AuthFilter`)
@@ -237,7 +237,7 @@ In **Phase 2**, the complete desktop application and relational database operati
 
 ---
 
-## 🌐 Phase 3 Web Architecture & Implementation (Active)
+## 🌐 Phase 3 Web Architecture & Implementation (Completed)
 
 In **Phase 3**, the system transitions from desktop-bound Java Swing software into a universal **Web Application** powered by **Java Servlets, JavaServer Pages (JSP), and the Model-View-Controller (MVC)** architectural pattern, strictly fulfilling **Section D** of the Advanced Java university syllabus.
 
