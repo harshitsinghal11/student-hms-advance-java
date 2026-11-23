@@ -3,11 +3,38 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Theme toggle initialization (Light / Dark)
+    // 1. Theme Toggle Initialization & Handler
     const storedTheme = localStorage.getItem('shms-theme') || 'light';
     document.documentElement.setAttribute('data-theme', storedTheme);
 
-    // Modal dialog controls
+    const themeToggleBtn = document.getElementById('themeToggle');
+    if (themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+            const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', nextTheme);
+            localStorage.setItem('shms-theme', nextTheme);
+        });
+    }
+
+    // 2. Mobile Sidebar Navigation Toggle
+    const sidebarToggleBtn = document.getElementById('sidebarToggle');
+    const sidebar = document.querySelector('.sidebar');
+    if (sidebarToggleBtn && sidebar) {
+        sidebarToggleBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            sidebar.classList.toggle('sidebar-open');
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (sidebar.classList.contains('sidebar-open') && !sidebar.contains(e.target) && e.target !== sidebarToggleBtn) {
+                sidebar.classList.remove('sidebar-open');
+            }
+        });
+    }
+
+    // 3. Modal Dialog Controls
     document.querySelectorAll('[data-modal-open]').forEach(button => {
         button.addEventListener('click', () => {
             const modalId = button.getAttribute('data-modal-open');
