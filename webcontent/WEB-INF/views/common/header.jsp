@@ -10,7 +10,7 @@
 </head>
 <body>
     <header class="app-header">
-        <a href="${pageContext.request.contextPath}/" class="brand-title">Hostel MS</a>
+        <a href="${pageContext.request.contextPath}/" class="brand-title">CampusStay</a>
         <div class="user-nav">
             <c:if test="${not empty sessionScope.currentUser}">
                 <span class="user-greeting">Logged in as: <strong>${sessionScope.currentUser.fullName}</strong> (${sessionScope.currentUser.role})</span>
